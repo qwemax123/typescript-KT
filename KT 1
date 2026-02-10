@@ -1,0 +1,26 @@
+// 3
+
+type Student = {
+    name: string
+    age: number
+    facultative: Facultative
+}
+
+type Facultative = {
+    title: string
+}
+
+const student1: Student = {
+    name: "qwe",
+    age: 12,
+    facultative: { title: "design" },
+}
+
+const student2: Student = {
+    name: "asd",
+    age: 34,
+    facultative: { title: "math" },
+}
+
+console.log(student1)
+console.log(student2)
