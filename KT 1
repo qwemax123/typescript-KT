@@ -1,9 +1,33 @@
-// 3
+// 1
+type Hobby = "спорт" | "танцы" | "игры" | "музыка"
 
+let hobby: Hobby
+
+hobby = "спорт"
+hobby = "танцы"
+
+hobby = "труды"
+
+
+// 2
+type Extra = "русский" | "литература" | "биология" | "география"
+type Hobby = "спорт" | "танцы" | "игры" | "музыка"
+type Facultative = Hobby | Extra
+
+let proverka: Facultative
+
+proverka = "русский"
+proverka = "литература"
+proverka = "игры"
+proverka = "музыка"
+
+
+// 3
 type Student = {
     name: string
-    age: number
+    age: Age
     facultative: Facultative
+    group: Group
 }
 
 type Facultative = {
@@ -11,16 +35,174 @@ type Facultative = {
 }
 
 const student1: Student = {
-    name: "qwe",
-    age: 12,
+    name: "аня",
+    age: 16,
     facultative: { title: "design" },
+    group: "A"
 }
 
 const student2: Student = {
-    name: "asd",
-    age: 34,
+    name: "ваня",
+    age: 18,
     facultative: { title: "math" },
+    group: "B"
 }
 
 console.log(student1)
 console.log(student2)
+
+
+// 4
+interface StudentI {
+    name: string
+    age: number
+    facultative: Facultative
+}
+
+const student: StudentI = {
+    name: "аня",
+    age: 17,
+    facultative: { title: "design" },
+}
+
+const studentt: StudentI = {
+    name: "ваня",
+    age: 34,
+    facultative: { title: "math" },
+}
+// думаю type удобнее
+
+
+// 5
+type Age = 16 | 17 | 18 | 19
+// другое число не подходит
+
+
+// 6 
+type Group = "A" | "B" | "C"
+
+
+// 7
+class StudentClass {
+    name: string
+    age: Age
+    facultative: Facultative
+
+    constructor(name: string, age: Age, facultative: Facultative) {
+        this.name = name
+        this.age = age
+        this.facultative = facultative
+    }
+    info(): string { // 8
+        return `${this.name}, ${this.age}, ${this.facultative}`
+    }
+}
+
+const class1 = new StudentClass("аня", 16, { title: "design" })
+const class2 = new StudentClass("ваня", 18, { title: "math" })
+
+console.log(class1)
+console.log(class2)
+
+
+// 9
+class School {
+    students: StudentClass[] = []
+
+    addStudent(student: StudentClass) {
+        this.students.push(student)
+    }
+    listNames(): string[] { // 10
+        return this.students.map(student => student.name)
+    }
+    countByFacultative(f: Facultative) { // 11
+        return this.students.filter(student => student.facultative === f).length
+    }
+    findByName(name: string): StudentClass | null { // 12
+        const student = this.students.find(stud => stud.name === name)
+        return student || null
+    }
+    removeByName(name: string): boolean { // 14
+        const n = this.students.findIndex(stud => stud.name === name)
+        if (n!== -1) {
+            this.students.splice(n, 1)
+            return true
+        }
+        return false
+    } 
+}
+
+const school = new School()
+
+const student_1 = new StudentClass("серега", 16, { title: "math" })
+const student_2 = new StudentClass("олег", 16, { title: "design" })
+const student_3 = new StudentClass("русалка", 17, { title: "design" })
+
+
+school.addStudent(student_1)
+school.addStudent(student_2)
+school.addStudent(student_3)
+
+const names: string[] = school.listNames()
+
+const countNumber: number = school.countByFacultative("math")
+
+const stud1 = school.findByName("серега")
+if (stud1) {
+    console.log(stud1.info())
+} else {
+    console.log("не найден")
+}
+const stud2 = school.findByName("лиза")
+if (stud2) {
+    console.log(stud2.info())
+} else {
+    console.log("не найден")
+}
+
+const remove1 = school.removeByName("серега")
+console.log("серега удален?", remove1)
+
+
+console.log(school.students)
+console.log(names)
+console.log(countNumber)
+
+
+// 13
+type SchoolEvent = 
+    | { type: "add"; student: StudentClass }
+    | { type: "remove"; name: string }
+
+function handleEvent(school: School, event: SchoolEvent) {
+    if (event.type === "add") {
+        console.log(`студент ${event.student.name} добавлен`)
+    } else if (event.type === "remove") {
+        school.students = school.students.filter(st => st.name !== event.name)
+        console.log((`студент ${event.name} удален`))
+    }
+}
+const school = new School()
+const stud = new StudentClass("серега", 16, { title: "math" })
+handleEvent(school, { type: "add", student: stud })
+
+
+// 15
+type Level = 1 | 2 | 3 | 4
+
+function nextLevel(level: Level): Level {
+    switch (level) {
+        case 1: return 2
+        case 2: return 3
+        case 3: return 4
+        case 4: return 4
+    }
+}
+
+const st = new StudentClass("серега", { title: "math" }, 1)
+console.log(st.info())
+
+st.level = nextLevel(st.level)
+console.log("уровень после перехода: ")
+console.log(st.info())
+
